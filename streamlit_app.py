@@ -11,58 +11,187 @@ from sap_extractor import SAPPropertyExtractor
 
 # Page configuration
 st.set_page_config(
-    page_title="SAP Property Data Extractor",
-    page_icon="🏠",
-    layout="wide",
+    page_title="Elmhurst SAP Report Data Extractor",
+    page_icon="📊",
+    layout="centered",
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for professional styling
+# Minimal, clean styling
 st.markdown("""
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+    
+    .stApp {
+        background: #ffffff;
+    }
+    
     .main-header {
-        text-align: center;
-        padding: 2rem 0;
-        background: linear-gradient(90deg, #1f4e79 0%, #2e7bb4 100%);
-        color: white;
-        margin: -1rem -1rem 2rem -1rem;
-        border-radius: 0 0 10px 10px;
+        text-align: left;
+        padding: 3rem 0 2rem 0;
+        margin: -3rem 0 3rem 0;
     }
-    .feature-box {
-        background: #f8f9fa;
-        padding: 1.5rem;
-        border-radius: 10px;
-        border-left: 4px solid #2e7bb4;
-        margin: 1rem 0;
+    
+    .main-header h1 {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-size: 2.5rem;
+        font-weight: 300;
+        color: #1a1a1a;
+        margin: 0;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
     }
-    .stats-container {
-        background: #e3f2fd;
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 1rem 0;
-    }
-    .upload-section {
-        border: 2px dashed #2e7bb4;
-        border-radius: 10px;
+    
+    .info-box {
+        background: #fafafa;
         padding: 2rem;
-        text-align: center;
+        border-radius: 8px;
         margin: 2rem 0;
+        font-size: 0.95rem;
+        color: #4a4a4a;
+        border: 1px solid #f0f0f0;
+        font-family: 'Inter', sans-serif;
+        font-weight: 400;
+        line-height: 1.6;
     }
+    
+    .info-box strong {
+        font-weight: 500;
+        color: #1a1a1a;
+    }
+    
     .success-box {
-        background: #d4edda;
-        border: 1px solid #c3e6cb;
-        color: #155724;
-        padding: 1rem;
-        border-radius: 5px;
-        margin: 1rem 0;
+        background: #fafafa;
+        border: 1px solid #e0e0e0;
+        color: #1a1a1a;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
     }
+    
     .error-box {
-        background: #f8d7da;
-        border: 1px solid #f5c6cb;
-        color: #721c24;
-        padding: 1rem;
-        border-radius: 5px;
-        margin: 1rem 0;
+        background: #fef5f5;
+        border: 1px solid #f0d0d0;
+        color: #d32f2f;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+    }
+    
+    .stats-box {
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        padding: 2rem;
+        border-radius: 8px;
+        margin: 2rem 0;
+        text-align: center;
+    }
+    
+    .stButton > button {
+        background: #1a1a1a;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 0.75rem 2rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        letter-spacing: -0.01em;
+    }
+    
+    .stButton > button:hover {
+        background: #000000;
+        transform: translateY(-1px);
+    }
+    
+    .stMetric {
+        background: #fafafa;
+        border-radius: 8px;
+        padding: 1.25rem;
+        border: 1px solid #f0f0f0;
+    }
+    
+    .stMetric label {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #6a6a6a;
+    }
+    
+    .stMetric [data-testid="metric-value"] {
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        color: #1a1a1a;
+    }
+    
+    .stDataFrame {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    h3 {
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        color: #1a1a1a;
+        font-size: 1.25rem;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+        letter-spacing: -0.01em;
+    }
+    
+    h4 {
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        color: #1a1a1a;
+        font-size: 1.1rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        letter-spacing: -0.01em;
+    }
+    
+    .footer-text {
+        text-align: center;
+        color: #8a8a8a;
+        padding: 3rem 0 2rem 0;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 400;
+    }
+    
+    .footer-text p {
+        margin: 0;
+    }
+    
+    /* Clean file uploader */
+    .stFileUploader {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 2rem;
+        background: #fafafa;
+    }
+    
+    .stFileUploader > div {
+        background: #fafafa;
+    }
+    
+    /* Remove unnecessary Streamlit branding */
+    .css-1y4p8pa {
+        padding-top: 2rem;
+    }
+    
+    /* Clean progress bar */
+    .stProgress > div > div {
+        background-color: #e0e0e0;
+    }
+    
+    .stProgress > div > div > div {
+        background-color: #1a1a1a;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -79,61 +208,45 @@ def create_download_link(df, filename):
     return f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="{filename}">📥 Download Excel File</a>'
 
 def main():
-    # Header
+    # Minimal header
     st.markdown("""
     <div class="main-header">
-        <h1>🏠 SAP Property Data Extractor</h1>
-        <p>Professional SAP document processing for property developers</p>
+        <h1>Elmhurst SAP Report Data Extractor</h1>
     </div>
     """, unsafe_allow_html=True)
     
-    # Introduction
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.markdown("""
-        <div class="feature-box">
-            <h3>🚀 Fast Processing</h3>
-            <p>Extract data from multiple properties in seconds</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown("""
-        <div class="feature-box">
-            <h3>📊 Clean Output</h3>
-            <p>Get organized Excel files ready for analysis</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown("""
-        <div class="feature-box">
-            <h3>🔒 Secure</h3>
-            <p>Your documents are processed locally and securely</p>
-        </div>
-        """, unsafe_allow_html=True)
+    # Minimal info box
+    st.markdown("""
+    <div class="info-box">
+        <strong>Extracts the following data:</strong><br><br>
+        • Property identifiers (Block X, Plot Y)<br>
+        • CO2 emissions (t/year)<br> 
+        • Space heating costs<br>
+        • Water heating and shower costs<br>
+        • Total DHW calculations
+    </div>
+    """, unsafe_allow_html=True)
     
     # File upload section
-    st.markdown("## 📄 Upload Your SAP Document")
+    st.markdown("### Upload Document")
     
     uploaded_file = st.file_uploader(
-        "Drag and drop your SAP PDF file here",
+        "Drop your PDF file here or click to browse",
         type=['pdf'],
-        help="Upload a PDF containing SAP energy calculation reports. Supports multi-property documents."
+        help="Supports single or multi-property SAP reports"
     )
     
     if uploaded_file is not None:
         # Show file details
         st.markdown(f"""
         <div class="success-box">
-            <strong>📎 File uploaded:</strong> {uploaded_file.name}<br>
-            <strong>📏 Size:</strong> {uploaded_file.size / 1024 / 1024:.2f} MB
+            <strong>File uploaded:</strong> {uploaded_file.name}<br>
+            <strong>Size:</strong> {uploaded_file.size / 1024 / 1024:.2f} MB
         </div>
         """, unsafe_allow_html=True)
         
         # Processing button
-        if st.button("🔄 Extract Property Data", type="primary", use_container_width=True):
+        if st.button("Extract Data", type="primary", use_container_width=True):
             
             # Create progress indicators
             progress_bar = st.progress(0)
@@ -190,7 +303,7 @@ def main():
                     status_text.text("✅ Extraction completed successfully!")
                     
                     # Show results
-                    st.markdown("## 📊 Extraction Results")
+                    st.markdown("### Results")
                     
                     # Statistics
                     total_properties = len(all_properties)
@@ -213,34 +326,23 @@ def main():
                         st.metric("Shower Data", f"{found_shower}/{total_properties}")
                     
                     # Show data table
-                    st.markdown("### 📋 Property Data")
+                    st.markdown("#### Extracted Data")
                     st.dataframe(df, use_container_width=True)
                     
-                    # Download button
+                    # Download section
                     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                    filename = f"sap_properties_{timestamp}.xlsx"
+                    filename = f"elmhurst_sap_data_{timestamp}.xlsx"
                     
                     # Create download link
                     download_link = create_download_link(df, filename)
                     
-                    st.markdown("### 📥 Download Results")
+                    st.markdown("#### Download")
                     st.markdown(f"""
-                    <div style="text-align: center; padding: 2rem; background: #f8f9fa; border-radius: 10px; margin: 1rem 0;">
-                        <h4>Your Excel file is ready!</h4>
-                        <p style="margin: 1rem 0;">Click below to download your extracted property data</p>
-                        <div style="font-size: 1.2rem;">
+                    <div class="stats-box" style="text-align: center;">
+                        <div style="font-size: 1.1rem; margin-bottom: 1rem;">
                             {download_link}
                         </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                    # Summary info
-                    st.markdown(f"""
-                    <div class="stats-container">
-                        <strong>📈 Summary:</strong><br>
-                        • Successfully extracted {total_properties} properties<br>
-                        • File: {filename}<br>
-                        • Processed: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+                        <small>File: {filename}</small>
                     </div>
                     """, unsafe_allow_html=True)
                     
@@ -266,18 +368,10 @@ def main():
                 </div>
                 """, unsafe_allow_html=True)
     
-    # Footer information
-    st.markdown("---")
+    # Minimal footer
     st.markdown("""
-    <div style="text-align: center; color: #666; padding: 2rem;">
-        <h4>How it works:</h4>
-        <p>
-            1. Upload your SAP PDF document (single or multi-property)<br>
-            2. Our system automatically identifies property sections<br>
-            3. Extracts key data: Property ID, CO2 emissions, Space heating, Water heating, Shower data<br>
-            4. Download clean Excel file ready for analysis
-        </p>
-        <p><em>All processing is done securely - your files are not stored.</em></p>
+    <div class="footer-text">
+        <p>Files are processed locally and not stored.</p>
     </div>
     """, unsafe_allow_html=True)
 
